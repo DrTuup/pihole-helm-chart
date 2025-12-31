@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pihole-dns
+  name: pihole-dns
+  annotations:
+    metallb.io/allow-shared-ip: "pihole-key-192-168-1-3"
+    metallb.io/loadbalancerIP: 192.168.1.3
+spec:
+  type: LoadBalancer
+  ports:
+    - name: dns
+      port: 53
+      protocol: TCP
+      targetPort: 53
+    - name: dns-udp
+      port: 53
+      protocol: UDP
+      targetPort: 53
+  selector:
+    app: pihole

@@ -1,0 +1,20 @@
+{{- if .Values.config.dhcp.active }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pihole-dhcp
+  name: pihole-dhcp
+  annotations:
+    metallb.io/allow-shared-ip: "pihole-key-192-168-1-3"
+    metallb.io/loadbalancerIP: 192.168.1.3
+spec:
+  type: LoadBalancer
+  ports:
+    - name: dhcp
+      port: 67
+      protocol: UDP
+      targetPort: 67
+  selector:
+    app: pihole
+{{- end }}

@@ -1,0 +1,223 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-application-cm"
+  namespace: "{{ .Release.Namespace }}"
+data:
+  pihole.toml: |-
+    [dns]
+      upstreams = {{ toToml .Values.config.dns.upstreams }}
+      CNAMEdeepInspect = {{ .Values.config.dns.cnameDeepInspect }}
+      blockESNI = {{ .Values.config.dns.blockESNI }}
+      EDNS0ECS = {{ .Values.config.dns.edns0ECS }}
+      ignoreLocalhost = {{ .Values.config.dns.ignoreLocalhost }}
+      showDNSSEC = {{ .Values.config.dns.showDNSSEC }}
+      analyzeOnlyAandAAAA = {{ .Values.config.dns.analyzeOnlyAandAAAA }}
+      piholePTR = "{{ .Values.config.dns.piholePTR }}"
+      replyWhenBusy = "{{ .Values.config.dns.replyWhenBusy }}"
+      blockTTL = {{ .Values.config.dns.blockTTL }}
+      hosts = {{ toToml .Values.config.dns.hosts }}
+      domainNeeded = {{ .Values.config.dns.domainNeeded }}
+      expandHosts = {{ .Values.config.dns.expandHosts }}
+      bogusPriv = {{ .Values.config.dns.bogusPriv }}
+      dnssec = {{ .Values.config.dns.dnssec }}
+      interface = "{{ .Values.config.dns.interface }}"
+      hostRecord = "{{ .Values.config.dns.hostRecord }}"
+      listeningMode = "{{ .Values.config.dns.listeningMode }}"
+      queryLogging = {{ .Values.config.dns.queryLogging }}
+      cnameRecords = {{ toToml .Values.config.dns.cnameRecords }}
+      port = {{ .Values.config.dns.port }}
+      localise = {{ .Values.config.dns.localise }}
+      revServers = {{ toToml .Values.config.dns.revServers }}
+
+      [dns.domain]
+        name = "{{ .Values.config.dns.domain.name }}"
+        local = {{ .Values.config.dns.domain.local }}
+
+      [dns.cache]
+        size = {{ .Values.config.dns.cache.size }}
+        optimizer = {{ .Values.config.dns.cache.optimizer }}
+        upstreamBlockedTTL = {{ .Values.config.dns.cache.upstreamBlockedTTL }}
+
+      [dns.blocking]
+        active = {{ .Values.config.dns.blocking.active }}
+        mode = "{{ .Values.config.dns.blocking.mode }}"
+        edns = "{{ .Values.config.dns.blocking.edns }}"
+
+      [dns.specialDomains]
+        mozillaCanary = {{ .Values.config.dns.specialDomains.mozillaCanary }}
+        iCloudPrivateRelay = {{ .Values.config.dns.specialDomains.iCloudPrivateRelay }}
+        designatedResolver = {{ .Values.config.dns.specialDomains.designatedResolver }}
+
+        [dns.reply.host]
+          force4 = {{ .Values.config.dns.reply.host.force4 }}
+          ipv4 = "{{ .Values.config.dns.reply.host.ipv4 }}"
+          force6 = {{ .Values.config.dns.reply.host.force6 }}
+          ipv6 = "{{ .Values.config.dns.reply.host.ipv6 }}"
+
+        [dns.reply.blocking]
+          force4 = {{ .Values.config.dns.reply.blocking.force4 }}
+          ipv4 = "{{ .Values.config.dns.reply.blocking.ipv4 }}"
+          force6 = {{ .Values.config.dns.reply.blocking.force6 }}
+          ipv6 = "{{ .Values.config.dns.reply.blocking.ipv6 }}"
+
+      [dns.rateLimit]
+        count = {{ .Values.config.dns.rateLimit.count }}
+        interval = {{ .Values.config.dns.rateLimit.interval }}
+
+    [dhcp]
+      active = {{ .Values.config.dhcp.active }}
+      start = "{{ .Values.config.dhcp.start }}"
+      end = "{{ .Values.config.dhcp.end }}"
+      router = "{{ .Values.config.dhcp.router }}"
+      netmask = "{{ .Values.config.dhcp.netmask }}"
+      leaseTime = "{{ .Values.config.dhcp.leaseTime }}"
+      ipv6 = {{ .Values.config.dhcp.ipv6 }}
+      rapidCommit = {{ .Values.config.dhcp.rapidCommit }}
+      multiDNS = {{ .Values.config.dhcp.multiDNS }}
+      logging = {{ .Values.config.dhcp.logging }}
+      ignoreUnknownClients = {{ .Values.config.dhcp.ignoreUnknownClients }}
+      hosts = {{ toToml .Values.config.dhcp.hosts }}
+
+      [ntp.ipv4]
+        active = {{ .Values.config.ntp.ipv4.active }}
+        address = "{{ .Values.config.ntp.ipv4.address }}"
+
+      [ntp.ipv6]
+        active = {{ .Values.config.ntp.ipv6.active }}
+        address = "{{ .Values.config.ntp.ipv6.address }}"
+
+      [ntp.sync]
+        active = {{ .Values.config.ntp.sync.active }}
+        server = "{{ .Values.config.ntp.sync.server }}"
+        interval = {{ .Values.config.ntp.sync.interval }}
+        count = {{ .Values.config.ntp.sync.count }}
+
+        [ntp.sync.rtc]
+          set = {{ .Values.config.ntp.sync.rtc.set }}
+          device = "{{ .Values.config.ntp.sync.rtc.device }}"
+          utc = {{ .Values.config.ntp.sync.rtc.utc }}
+
+    [resolver]
+      resolveIPv4 = {{ .Values.config.resolver.resolveIPv4 }}
+      resolveIPv6 = {{ .Values.config.resolver.resolveIPv6 }}
+      networkNames = {{ .Values.config.resolver.networkNames }}
+      refreshNames = "{{ .Values.config.resolver.refreshNames }}"
+
+    [database]
+      dbImport = {{ .Values.config.database.dbImport }}
+      maxDBdays = {{ .Values.config.database.maxDBdays }}
+      dbInterval = {{ .Values.config.database.dbInterval }}
+      useWAL = {{ .Values.config.database.useWAL }}
+
+      [database.network]
+        parseARPcache = {{ .Values.config.database.network.parseARPcache }}
+        expire = {{ .Values.config.database.network.expire }}
+
+    [webserver]
+      domain = "{{ .Values.config.webserver.domain }}"
+      acl = "{{ .Values.config.webserver.acl }}"
+      port = "{{ .Values.config.webserver.port }}"
+      threads = {{ .Values.config.webserver.threads }}
+      headers = {{ toToml .Values.config.webserver.headers }}
+      serveAll = {{ .Values.config.webserver.serveAll }}
+      advancedOpts = {{ toToml .Values.config.webserver.advancedOpts }}
+
+      [webserver.session]
+        timeout = {{ .Values.config.webserver.session.timeout }}
+        restore = {{ .Values.config.webserver.session.restore }}
+
+      [webserver.tls]
+        cert = "{{ .Values.config.webserver.tls.cert }}"
+        validity = {{ .Values.config.webserver.tls.validity }}
+
+      [webserver.paths]
+        webroot = "{{ .Values.config.webserver.paths.webroot }}"
+        webhome = "{{ .Values.config.webserver.paths.webhome }}"
+        prefix = "{{ .Values.config.webserver.paths.prefix }}"
+
+      [webserver.interface]
+        boxed = {{ .Values.config.webserver.interface.boxed }}
+        theme = "{{ .Values.config.webserver.interface.theme }}"
+
+      [webserver.api]
+        maxSessions = {{ .Values.config.webserver.api.maxSessions }}
+        prettyJSON = {{ .Values.config.webserver.api.prettyJSON }}
+        pwhash = "{{ .Values.config.webserver.api.pwhash }}"
+        totpSecret = "{{ .Values.config.webserver.api.totpSecret }}"
+        appPwhash = "{{ .Values.config.webserver.api.appPwhash }}"
+        appSudo = {{ .Values.config.webserver.api.appSudo }}
+        cliPw = {{ .Values.config.webserver.api.cliPw }}
+        excludeClients = {{ toToml .Values.config.webserver.api.excludeClients }}
+        excludeDomains = {{ toToml .Values.config.webserver.api.excludeDomains }}
+        maxHistory = {{ .Values.config.webserver.api.maxHistory }}
+        maxClients = {{ .Values.config.webserver.api.maxClients }}
+        clientHistoryGlobalMax = {{ .Values.config.webserver.api.clientHistoryGlobalMax }}
+        allowDestructive = {{ .Values.config.webserver.api.allowDestructive }}
+
+        [webserver.api.temp]
+          limit = {{ .Values.config.webserver.api.temp.limit }}
+          unit = "{{ .Values.config.webserver.api.temp.unit }}"
+
+    [files]
+      pid = "{{ .Values.config.files.pid }}"
+      database = "{{ .Values.config.files.database }}"
+      gravity = "{{ .Values.config.files.gravity }}"
+      gravityTmp = "{{ .Values.config.files.gravityTmp }}"
+      macvendor = "{{ .Values.config.files.macvendor }}"
+      pcap = "{{ .Values.config.files.pcap }}"
+
+      [files.log]
+        ftl = "{{ .Values.config.files.log.ftl }}"
+        dnsmasq = "{{ .Values.config.files.log.dnsmasq }}"
+        webserver = "{{ .Values.config.files.log.webserver }}"
+
+    [misc]
+      privacyLevel = {{ .Values.config.misc.privacyLevel }}
+      delayStartup = {{ .Values.config.misc.delayStartup }}
+      nice = {{ .Values.config.misc.nice }}
+      addr2line = {{ .Values.config.misc.addr2line }}
+      etcDnsmasqD = {{ .Values.config.misc.etcDnsmasqD }}
+      dnsmasqLines = {{ .Values.config.misc.dnsmasqLines | toJson }}
+      extraLogging = {{ .Values.config.misc.extraLogging }}
+      readOnly = {{ .Values.config.misc.readOnly }}
+      normalizeCPU = {{ .Values.config.misc.normalizeCPU }}
+      hideDnsmasqWarn = {{ .Values.config.misc.hideDnsmasqWarn }}
+
+      [misc.check]
+        load = {{ .Values.config.misc.check.load }}
+        shmem = {{ .Values.config.misc.check.shmem }}
+        disk = {{ .Values.config.misc.check.disk }}
+
+    [debug]
+      database = {{ .Values.config.debug.database }}
+      networking = {{ .Values.config.debug.networking }}
+      locks = {{ .Values.config.debug.locks }}
+      queries = {{ .Values.config.debug.queries }}
+      flags = {{ .Values.config.debug.flags }}
+      shmem = {{ .Values.config.debug.shmem }}
+      gc = {{ .Values.config.debug.gc }}
+      arp = {{ .Values.config.debug.arp }}
+      regex = {{ .Values.config.debug.regex }}
+      api = {{ .Values.config.debug.api }}
+      tls = {{ .Values.config.debug.tls }}
+      overtime = {{ .Values.config.debug.overtime }}
+      status = {{ .Values.config.debug.status }}
+      caps = {{ .Values.config.debug.caps }}
+      dnssec = {{ .Values.config.debug.dnssec }}
+      vectors = {{ .Values.config.debug.vectors }}
+      resolver = {{ .Values.config.debug.resolver }}
+      edns0 = {{ .Values.config.debug.edns0 }}
+      clients = {{ .Values.config.debug.clients }}
+      aliasclients = {{ .Values.config.debug.aliasclients }}
+      events = {{ .Values.config.debug.events }}
+      helper = {{ .Values.config.debug.helper }}
+      config = {{ .Values.config.debug.config }}
+      inotify = {{ .Values.config.debug.inotify }}
+      webserver = {{ .Values.config.debug.webserver }}
+      extra = {{ .Values.config.debug.extra }}
+      reserved = {{ .Values.config.debug.reserved }}
+      ntp = {{ .Values.config.debug.ntp }}
+      netlink = {{ .Values.config.debug.netlink }}
+      timing = {{ .Values.config.debug.timing }}
+      all = {{ .Values.config.debug.all }}

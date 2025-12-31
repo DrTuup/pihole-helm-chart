@@ -1,0 +1,543 @@
+# -- A list of additional adlists to be included fetched by pi-hole.
+image:
+  repository: pihole/pihole
+  tag: "2025.11.1"
+
+replicaCount: 1
+
+webPassword: "changeme"
+
+adlists:
+  - "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+
+config:
+  # -- DNS configuration settings
+  dns:
+    # -- Upstream DNS servers to be used by Pi-hole for resolving non-local queries
+    upstreams:
+      - "8.8.8.8"
+      - "8.8.4.4"
+
+    # -- Enable deep CNAME inspection for enhanced DNS resolution
+    cnameDeepInspect: true
+
+    # -- Block _esni. subdomains to enhance privacy by preventing Encrypted Server Name Indication abuse
+    blockESNI: true
+
+    # -- Allow Pi-hole to obtain client IPs behind NAT using EDNS0 client subnet (ECS) information
+    edns0ECS: true
+
+    # -- Hide queries made by localhost from logging
+    ignoreLocalhost: false
+
+    # -- Show internally generated DNSSEC queries in analytics
+    showDNSSEC: true
+
+    # -- Only analyze A and AAAA DNS queries
+    analyzeOnlyAandAAAA: false
+
+    # -- How Pi-hole responds to PTR requests for local interface addresses. Options: "NONE", "HOSTNAME", "HOSTNAMEFQDN", "PI.HOLE"
+    piholePTR: "PI.HOLE"
+
+    # -- How to handle queries when the gravity database is unavailable. Options: "BLOCK", "ALLOW", "REFUSE", "DROP"
+    replyWhenBusy: "ALLOW"
+
+    # -- TTL (in seconds) for blocked queries
+    blockTTL: 2
+
+    # -- Custom DNS records in hosts format (IP HOSTNAME) like: 192.168.1.100 pihole.example.com
+    hosts: []
+
+    # -- Never forward plain names (without dots) to upstream nameservers
+    domainNeeded: true
+
+    # -- Add domain suffix to simple names in /etc/hosts
+    expandHosts: true
+
+    # -- Answer with NXDOMAIN for reverse lookups of private IP ranges not found locally
+    bogusPriv: true
+
+    # -- Validate DNS replies using DNSSEC
+    dnssec: false
+
+    # -- Network interface to use for DNS and DHCP. Leave empty for auto-detection
+    interface: "eth0"
+
+    # -- Hostname record to add to DNS with associated A, AAAA and PTR records
+    hostRecord: ""
+
+    # -- DNS listening mode. Options: "LOCAL", "SINGLE", "BIND", "ALL", "NONE"
+    listeningMode: "LOCAL"
+
+    # -- Log DNS queries and replies
+    queryLogging: true
+
+    # -- Custom CNAME records, in HOSTNAME ALIAS format like: "alias.domain.com original.domain.com"
+    cnameRecords: []
+
+    # -- Port used by the DNS server
+    port: 53
+
+    # -- Localize queries to return all possible values for local DNS records
+    localise: true
+
+    # -- Reverse servers (conditional forwarding) for local network domain resolution
+    revServers: []
+
+    domain:
+      # -- Local DNS domain used by Pi-hole
+      name: "lan"
+
+      # -- Treat configured domain as local and never forward upstream
+      local: true
+
+    cache:
+      # -- DNS cache size in entries
+      size: 10000
+
+      # -- Query cache optimizer: serve stale cache data for recently expired entries to improve DNS query delays
+      optimizer: 3600
+
+      # -- TTL (in seconds) for queries blocked upstream before checking again
+      upstreamBlockedTTL: 86400
+
+    blocking:
+      # -- Enable DNS query blocking
+      active: true
+
+      # -- Reply mode for blocked queries. Options: "NULL", "IP_NODATA_AAAA", "IP", "NX", "NODATA"
+      mode: "NULL"
+
+      # -- Enrich blocked replies with EDNS0 information. Options: "NONE", "CODE", "TEXT"
+      edns: "TEXT"
+
+    specialDomains:
+      # -- Block use-application-dns.net to disable Firefox DNS-over-HTTP
+      mozillaCanary: true
+
+      # -- Block iCloud Private Relay domains to prevent Apple devices from bypassing Pi-hole
+      iCloudPrivateRelay: true
+
+      # -- Block resolver.arpa to prevent Discovery of Designated Resolvers bypass
+      designatedResolver: true
+
+    reply:
+      host:
+        # -- Force a specific IPv4 address for pi.hole and hostname responses
+        force4: false
+
+        # -- Custom IPv4 address for Pi-hole host (leave empty for auto)
+        ipv4: ""
+
+        # -- Force a specific IPv6 address for pi.hole and hostname responses
+        force6: false
+
+        # -- Custom IPv6 address for Pi-hole host (leave empty for auto)
+        ipv6: ""
+
+      blocking:
+        # -- Force a specific IPv4 address in IP blocking mode
+        force4: false
+
+        # -- Custom IPv4 address for IP blocking mode (leave empty for auto)
+        ipv4: ""
+
+        # -- Force a specific IPv6 address in IP blocking mode
+        force6: false
+
+        # -- Custom IPv6 address for IP blocking mode (leave empty for auto)
+        ipv6: ""
+
+    rateLimit:
+      # -- Maximum number of DNS queries allowed per client within the interval
+      count: 1000
+
+      # -- Time interval (in seconds) for rate limiting
+      interval: 60
+
+  # -- DHCP server configuration
+  dhcp:
+    # -- Enable Pi-hole's embedded DHCP server
+    active: false
+
+    # -- Start address of DHCP address pool
+    start: ""
+
+    # -- End address of DHCP address pool
+    end: ""
+
+    # -- Gateway address for DHCP clients (typically your router)
+    router: ""
+
+    # -- Network netmask for DHCP. Leave empty for auto-detection on directly connected networks
+    netmask: ""
+
+    # -- DHCP lease time (e.g., "45m", "1h", "2d", "1w", "infinite")
+    leaseTime: ""
+
+    # -- Enable IPv6 DHCP support
+    ipv6: false
+
+    # -- Enable DHCPv4 Rapid Commit Option (RFC 4039)
+    rapidCommit: false
+
+    # -- Advertise Pi-hole DNS server multiple times to prevent client overrides
+    multiDNS: false
+
+    # -- Log all DHCP-related activity
+    logging: false
+
+    # -- Ignore DHCP clients not explicitly configured in dhcp.hosts
+    ignoreUnknownClients: false
+
+    # -- Static DHCP leases and per-host parameters
+    hosts: []
+
+  # -- NTP (Network Time Protocol) server configuration
+  ntp:
+    ipv4:
+      # -- Enable NTP server for IPv4
+      active: true
+
+      # -- IPv4 address to listen on for NTP requests (empty for wildcard 0.0.0.0)
+      address: ""
+
+    ipv6:
+      # -- Enable NTP server for IPv6
+      active: true
+
+      # -- IPv6 address to listen on for NTP requests (empty for wildcard ::)
+      address: ""
+
+    sync:
+      # -- Enable NTP time synchronization with upstream NTP server
+      active: true
+
+      # -- Upstream NTP server to synchronize with
+      server: "pool.ntp.org"
+
+      # -- Interval (in seconds) between NTP synchronization attempts (0 to disable)
+      interval: 3600
+
+      # -- Number of NTP syncs to average before updating system time
+      count: 8
+
+      rtc:
+        # -- Update system's real-time clock (RTC) if available
+        set: false
+
+        # -- Path to RTC device (empty for auto-discovery)
+        device: ""
+
+        # -- Set RTC to UTC timezone
+        utc: true
+
+  # -- Hostname and IP resolution configuration
+  resolver:
+    # -- Resolve IPv4 addresses to hostnames
+    resolveIPv4: true
+
+    # -- Resolve IPv6 addresses to hostnames
+    resolveIPv6: true
+
+    # -- Use fallback to network table for client name resolution
+    networkNames: true
+
+    # -- Frequency of PTR lookups for hostname refresh. Options: "IPV4_ONLY", "ALL", "UNKNOWN", "NONE"
+    refreshNames: "IPV4_ONLY"
+
+  # -- Database and query history configuration
+  database:
+    # -- Load query history from database on startup
+    dbImport: true
+
+    # -- How long to store queries in database (in days)
+    maxDBdays: 91
+
+    # -- How often to store queries in database (in seconds)
+    dbInterval: 60
+
+    # -- Enable Write-Ahead Logging (WAL) for better database performance
+    useWAL: true
+
+    network:
+      # -- Analyze local ARP cache for client identification
+      parseARPcache: true
+
+      # -- How long to keep IP addresses in network table (in days)
+      expire: 91
+
+  # -- Web server and API configuration
+  webserver:
+    # -- Domain on which the web interface is served
+    domain: "pi.hole"
+
+    # -- Web server ACL for IP address restrictions (empty = allow all)
+    acl: ""
+
+    # -- Ports to listen on (e.g., "80,443s,[::]:80,[::]:443s"). Append 's' for SSL, 'r' for redirect, 'o' for optional
+    port: "80o,443os,[::]:80o,[::]:443os"
+
+    # -- Maximum number of concurrent worker threads
+    threads: 50
+
+    # -- Additional HTTP headers added to web server responses
+    headers:
+      - "X-DNS-Prefetch-Control: off"
+      - "Content-Security-Policy: default-src 'self' 'unsafe-inline';"
+      - "X-Frame-Options: DENY"
+      - "X-XSS-Protection: 0"
+      - "X-Content-Type-Options: nosniff"
+      - "Referrer-Policy: strict-origin-when-cross-origin"
+
+    # -- Serve all files in webroot directory (vs only webhome and API)
+    serveAll: false
+
+    # -- Advanced CivetWeb options passed directly to web server
+    advancedOpts: []
+
+    session:
+      # -- Session timeout in seconds
+      timeout: 1800
+
+      # -- Backup and restore sessions from database across restarts
+      restore: true
+
+    tls:
+      # -- Path to TLS certificate file in PEM format
+      cert: "/etc/pihole/tls.pem"
+
+      # -- Validity period for auto-generated self-signed TLS certificates (in days)
+      validity: 47
+
+    paths:
+      # -- Server root directory
+      webroot: "/var/www/html"
+
+      # -- Sub-directory containing the web interface (requires leading and trailing slashes)
+      webhome: "/admin/"
+
+      # -- URL prefix for reverse proxy (e.g., "/pihole" for http://<ip>/pihole/admin/)
+      prefix: ""
+
+    interface:
+      # -- Use boxed layout for web interface
+      boxed: true
+
+      # -- Web interface theme. Options: "default-auto", "default-light", "default-dark", "default-darker", "high-contrast", "high-contrast-dark", "lcars"
+      theme: "default-auto"
+
+    api:
+      # -- Maximum number of concurrent API sessions
+      maxSessions: 16
+
+      # -- Prettify API JSON output with extra spacing and indentation
+      prettyJSON: false
+
+      # -- API password hash
+      pwhash: ""
+
+      # -- 2FA TOTP secret (20 Bytes Base32). Setting this enables 2FA for API and web interface
+      totpSecret: ""
+
+      # -- Application password hash for services that don't support 2FA
+      appPwhash: ""
+
+      # -- Allow app passwords to modify configuration settings
+      appSudo: false
+
+      # -- Create temporary CLI password for authentication
+      cliPw: true
+
+      # -- Regex array of clients excluded from API responses (Query Log, Top Clients)
+      excludeClients: []
+
+      # -- Regex array of domains excluded from API responses (Query Log, Top Domains)
+      excludeDomains: []
+
+      # -- History duration to import from database and return by API (in seconds, max 86400)
+      maxHistory: 86400
+
+      # -- Maximum number of clients to return in activity graph endpoint
+      maxClients: 10
+
+      # -- Compute most active clients globally vs per time slot
+      clientHistoryGlobalMax: true
+
+      # -- Allow destructive API calls (restart, flush logs, etc.)
+      allowDestructive: true
+
+      temp:
+        # -- Upper temperature limit before showing as "hot"
+        limit: 60.0
+
+        # -- Temperature unit. Options: "C" (Celsius), "F" (Fahrenheit), "K" (Kelvin)
+        unit: "C"
+
+  # -- File paths configuration
+  files:
+    # -- Path to Pi-hole FTL PID file
+    pid: "/run/pihole-FTL.pid"
+
+    # -- Path to FTL's long-term database
+    database: "/etc/pihole/pihole-FTL.db"
+
+    # -- Path to Pi-hole's gravity database
+    gravity: "/etc/pihole/gravity.db"
+
+    # -- Temporary directory for gravity updates (must be world-writable)
+    gravityTmp: "/tmp"
+
+    # -- Path to MAC vendor information database
+    macvendor: "/etc/pihole/macvendor.db"
+
+    # -- Optional PCAP file for debugging network traffic (empty to disable)
+    pcap: ""
+
+    log:
+      # -- Path to FTL log file
+      ftl: "/var/log/pihole/FTL.log"
+
+      # -- Path to dnsmasq DNS server log file
+      dnsmasq: "/var/log/pihole/pihole.log"
+
+      # -- Path to web server log file
+      webserver: "/var/log/pihole/webserver.log"
+
+  # -- Miscellaneous settings
+  misc:
+    # -- Privacy level for statistics. 0=all, 1=hide domains, 2=hide domains+clients, 3=anonymize everything
+    privacyLevel: 0
+
+    # -- Delay startup to allow late network interfaces to initialize (in seconds, 0-300)
+    delayStartup: 0
+
+    # -- Process niceness for CPU scheduler (-20 to 19, or -999 to disable)
+    nice: -10
+
+    # -- Translate stack addresses to code lines during bug backtrace
+    addr2line: true
+
+    # -- Load additional dnsmasq configuration from /etc/dnsmasq.d/ (use with caution)
+    etcDnsmasqD: false
+
+    # -- Additional dnsmasq configuration lines to inject
+    dnsmasqLines:
+      - "address=/local.rubenclaessens.nl/192.168.1.2"
+
+    # -- Log extra information about queries and replies
+    extraLogging: false
+
+    # -- Put configuration into read-only mode (prevent changes via API/CLI)
+    readOnly: false
+
+    # -- Normalize CPU usage by number of cores for more intuitive percentage values
+    normalizeCPU: true
+
+    # -- Hide warnings from dnsmasq
+    hideDnsmasqWarn: false
+
+    check:
+      # -- Check system load and warn if it exceeds number of cores
+      load: true
+
+      # -- Warn if shared memory usage exceeds percentage threshold (0 to disable)
+      shmem: 90
+
+      # -- Warn if disk usage exceeds percentage threshold (0 to disable)
+      disk: 90
+
+  # -- Debug logging configuration (normally all disabled)
+  debug:
+    # -- Debug database SQL statements and performance
+    database: false
+
+    # -- Debug detected network interfaces
+    networking: false
+
+    # -- Debug shared memory locks
+    locks: false
+
+    # -- Debug DNS queries and replies
+    queries: false
+
+    # -- Debug DNS query flags
+    flags: false
+
+    # -- Debug shared memory buffers
+    shmem: false
+
+    # -- Debug garbage collection operations
+    gc: false
+
+    # -- Debug ARP table processing
+    arp: false
+
+    # -- Debug regex matching
+    regex: false
+
+    # -- Debug API calls and authentication
+    api: false
+
+    # -- Debug TLS connections
+    tls: false
+
+    # -- Debug overTime memory operations
+    overtime: false
+
+    # -- Debug query status changes
+    status: false
+
+    # -- Debug process capabilities
+    caps: false
+
+    # -- Debug DNSSEC activity
+    dnssec: false
+
+    # -- Debug dynamic vector operations
+    vectors: false
+
+    # -- Debug hostname resolution
+    resolver: false
+
+    # -- Debug EDNS(0) data
+    edns0: false
+
+    # -- Debug client events and group assignments
+    clients: false
+
+    # -- Debug alias-client processing
+    aliasclients: false
+
+    # -- Debug event handling queue
+    events: false
+
+    # -- Debug script helpers
+    helper: false
+
+    # -- Debug config parsing
+    config: false
+
+    # -- Debug /etc/pihole filesystem monitoring
+    inotify: false
+
+    # -- Debug web server (CivetWeb) events
+    webserver: false
+
+    # -- Temporary debug flag for investigations
+    extra: false
+
+    # -- Debug reserved for future use
+    reserved: false
+
+    # -- NTP synchronization debugging
+    ntp: false
+
+    # -- Debug netlink communication
+    netlink: false
+
+    # -- Debug timing information
+    timing: false
+
+    # -- Enable all debug flags at once
+    all: false

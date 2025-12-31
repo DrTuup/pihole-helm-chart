@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-adlists-cm"
+  namespace: "{{ .Release.Namespace }}"
+data:
+  adlists.list: |
+{{- range .Values.adlists }}
+    {{ . }}
+{{- end }}

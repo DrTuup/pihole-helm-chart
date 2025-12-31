@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Release.Name }}-pihole"
+  name: "{{ .Release.Name }}-pihole-deployment"
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-pihole"
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-pihole"
+    spec:
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          name: pihole
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          ports:
+            - name: web
+              containerPort: 80
+            - name: websecure
+              containerPort: 443
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+            {{- if .Values.config.dhcp.active }}
+            - name: dhcp
+              containerPort: 67
+              protocol: UDP
+            {{- end }}
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: FTLCONF_webserver_api_password
+              valueFrom:
+                secretKeyRef:
+                  name: pihole-webpassword-secret
+                  key: password
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
+          volumeMounts:
+            - name: pihole-adlists
+              mountPath: /etc/pihole/adlists.list
+              subPath: adlists.list
+            - name: pihole-config
+              mountPath: /etc/pihole/pihole.toml
+              subPath: pihole.toml
+            - name: pihole-etc-pvc
+              mountPath: /etc/pihole
+      volumes:
+        - name: pihole-adlists
+          configMap:
+            name: "{{ .Release.Name }}-adlists-cm"
+        - name: pihole-config
+          configMap:
+            name: "{{ .Release.Name }}-application-cm"
+        - name: pihole-etc-pvc
+          persistentVolumeClaim:
+            claimName: "{{ .Release.Name }}-etc-pvc"

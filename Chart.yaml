@@ -1,0 +1,9 @@
+apiVersion: v2
+name: pihole
+description: A Helm chart for deploying Pi-hole, a network-wide ad blocker, on Kubernetes.
+
+type: application
+
+version: 0.1.0
+
+appVersion: "6.4.1"
